@@ -22,6 +22,9 @@ namespace SwConsole
         /// <returns>The <see cref="ModelDoc2"/> or null if open fails for any reason.</returns>
         static ModelDoc2 OpenDoc(string filePath)
         {
+//#if DEBUG
+//            throw new Exception("OpenDoc threw exception");
+//#endif
             // init return value
             ModelDoc2 swModel = null;
 
@@ -102,23 +105,28 @@ namespace SwConsole
 
         static void Main()
         {
-            Console.WriteLine("Starting SOLIDWORKS...");
+            try
+            {
+                Console.WriteLine("Starting SOLIDWORKS...");
 
-            swApp = new SldWorks();
+                swApp = new SldWorks();
 
-            swApp.Visible = true;
+                swApp.Visible = true;
 
-            Console.WriteLine("SOLIDWORKS current language: " + swApp.GetCurrentLanguage());
+                Console.WriteLine("SOLIDWORKS current language: " + swApp.GetCurrentLanguage());
 
-            Console.WriteLine("Open a document...");
+                Console.WriteLine("Open a document...");
 
-            OpenDoc(EXAMPLESDIR + @"Lesson02 - Object Model Basics\Case Study\sheetmetalsample.SLDASM");
+                OpenDoc(EXAMPLESDIR + @"Lesson02 - Object Model Basics\Case Study\sheetmetalsample.SLDASM");
 
-            Console.WriteLine("Closing document...");
-
+                Console.WriteLine("Closing document...");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("EXCEPTION THROWN! " + ex.Message);
+            }
 
             Console.WriteLine("\nPress any key to exit");
-
             Console.ReadKey();
         }
     }
