@@ -1,19 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SolidWorks.Interop.sldworks;
 using System.IO;
-using SolidWorks.Interop.swconst;
 using System.Diagnostics;
+using SolidWorks.Interop.sldworks;
+using SolidWorks.Interop.swconst;
 
 namespace SwConsole
 {
     class Program
     {
         const string EXAMPLESDIR = @"C:\SolidWorks Training Files\API Fundamentals\";
+        const string LESSON5DIR = EXAMPLESDIR + @"Lesson05 - Assembly Automation\";
+        const string LESSON5FILEDIR = LESSON5DIR + @"Case Study\Guitar Effect Pedal\";
 
         static SldWorks swApp;
+
+        /// <summary>
+        /// Logs a message to Debug and Console output.
+        /// </summary>
+        /// <param name="message"></param>
+        static void Log(string message)
+        {
+            Debug.WriteLine(message);
+            Console.WriteLine(message);
+        }
 
         /// <summary>
         /// Attempts to open the argument file in SOLIDWORKS.
@@ -22,13 +31,10 @@ namespace SwConsole
         /// <returns>The <see cref="ModelDoc2"/> or null if open fails for any reason.</returns>
         static ModelDoc2 OpenDoc(string filePath)
         {
-//#if DEBUG
-//            throw new Exception("OpenDoc threw exception");
-//#endif
             // init return value
             ModelDoc2 swModel = null;
 
-            Debug.WriteLine("Opening: " + filePath);
+            Log("Opening: " + filePath);
 
             if (!File.Exists(filePath))
             {
@@ -42,7 +48,6 @@ namespace SwConsole
                 swDocSpec.Silent = true;
 
                 swModel = swApp.OpenDoc7(swDocSpec);
-
 
                 // TODO: Handle open doc errors and warnings.
 
@@ -103,27 +108,76 @@ namespace SwConsole
             return swModel;
         }
 
+        /// <summary>
+        /// Simple document feature tree traversal example.
+        /// </summary>
+        /// <param name="swModel">The document with the feature tree that should be traversed.</param>
+        static void TraverseFeatures(ModelDoc2 swModel)
+        {
+            Log("Traversing features of: " + swModel.GetTitle());
+
+            //FeatureManager swFeatMgr = swModel.FeatureManager;
+
+            //// Basic feature traversal (verbose way that clearly illustrates how GetFeatures returns a boxed Array from COM)
+            //object oFeats = swFeatMgr.GetFeatures(false);
+            //if (oFeats != null)
+            //{
+            //    Array aFeats = (Array)oFeats;
+            //    foreach (Feature swFeat in aFeats)
+            //    {
+            //        Log($"Feature name: {swFeat.Name}; Type: {swFeat.GetTypeName2()}");
+            //    }
+            //}
+
+            //// We can do a bit better than the above (exact same but fewer lines)
+            //Array aFeats = swFeatMgr.GetFeatures(false) as Array;
+            //if (aFeats != null)
+            //{
+            //    foreach (Feature swFeat in aFeats)
+            //    {
+            //        Log($"Feature name: {swFeat.Name}; Type: {swFeat.GetTypeName2()}");
+            //    }
+            //}
+
+            // Furthermore, can (optional) eliminate the braces since we only had one operation inside the condition and the foreach loop.
+            // If/when you prefer this over the above is obviously subjective and opinion based.
+            // Also subjective/opinion but var could be just used in this case as well when declaring the Array.
+            var aFeats = swModel.FeatureManager.GetFeatures(false) as Array;
+            if (aFeats != null)
+                foreach (Feature swFeat in aFeats)
+                    Log($"Feature name: {swFeat.Name}; Type: {swFeat.GetTypeName2()}");
+        }
+
         static void Main()
         {
             try
             {
-                Console.WriteLine("Starting SOLIDWORKS...");
+                Log("Starting SOLIDWORKS...");
 
                 swApp = new SldWorks();
 
                 swApp.Visible = true;
 
-                Console.WriteLine("SOLIDWORKS current language: " + swApp.GetCurrentLanguage());
+                // Log some application info
+                Log($"SOLIDWORKS version: {swApp.RevisionNumber()}\nSOLIDWORKS current language: {swApp.GetCurrentLanguage()}");
 
-                Console.WriteLine("Open a document...");
+                ModelDoc2 swModel = OpenDoc(LESSON5FILEDIR + @"Guitar Effect Pedal.SLDASM");
 
-                OpenDoc(EXAMPLESDIR + @"Lesson02 - Object Model Basics\Case Study\sheetmetalsample.SLDASM");
+                if (swModel != null)
+                {
+                    // Open succeeded...
 
-                Console.WriteLine("Closing document...");
+                    // Do stuff with the active document (pointer returned from OpenDoc above)
+                    TraverseFeatures(swModel);
+                }
+
+                Log("Exiting SOLIDWORKS");
+                swApp.ExitApp();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("EXCEPTION THROWN! " + ex.Message);
+                // TODO: Do something better but this is better than nothing for now...
+                Log("EXCEPTION THROWN! " + ex.ToString());
             }
 
             Console.WriteLine("\nPress any key to exit");
