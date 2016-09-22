@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{0168B05D-3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwBareBonesAddIn", "SwBareBonesAddIn\SwBareBonesAddIn.csproj", "{EE377A4E-D6F4-45C2-9C47-E291DCB7B1FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwCommon", "SwCommon\SwCommon.csproj", "{D6CACFF1-A64C-4B9D-B1AE-8E04E75633D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{EE377A4E-D6F4-45C2-9C47-E291DCB7B1FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE377A4E-D6F4-45C2-9C47-E291DCB7B1FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE377A4E-D6F4-45C2-9C47-E291DCB7B1FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6CACFF1-A64C-4B9D-B1AE-8E04E75633D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6CACFF1-A64C-4B9D-B1AE-8E04E75633D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6CACFF1-A64C-4B9D-B1AE-8E04E75633D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6CACFF1-A64C-4B9D-B1AE-8E04E75633D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
